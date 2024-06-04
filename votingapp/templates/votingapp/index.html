@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Vote!</title>
+</head>
+<body>
+<div class="container-lg pt-3">
+    <div class="row">
+        <div class="col-0 col-md"></div>
+        <div class="col-md-9 col-lg-7">
+            <h1>Musikvoting</h1>
+            <br>
+            {% if cant_vote %}
+            <div class="alert alert-success" role="alert">
+                <b>Hab Geduld!</b> Du musst noch etwas warten, bis du wieder abstimmen kannst.<br>
+                Du kannst alle drei Minuten für ein Lied voten.
+            </div>
+            {% endif %}
+
+            {% if choices %}
+            <div class="row pb-1">
+                <div class="col-4 my-auto"><b><font size="4px">Liedtitel</font></b></div>
+                <div class="col-3 my-auto mr-auto"><b><font size="4px">Interpret</font></b></div>
+                <div class="col-2 my-auto text-right"><b><font size="4px">Votes</font></b></div>
+                <div class="col-3 my-auto"><b><font size="4px"> </font></b></div>
+            </div>
+            {% for choice in choices %}
+            <div class="row py-1">
+                {% if choice.played %}
+                <div class="col-4 my-auto"><font color="grey">{{ choice.song_title }}</font></div>
+                <div class="col-3 my-auto mr-auto"><font color="grey">{{ choice.interpret }}</font></div>
+                <div class="col-2 my-auto text-right"><font color="grey">{{ choice.votes }}</font></div>
+                <div class="col-3 my-auto text-right">
+                    <button class="btn btn-success" disabled>gespielt</button>
+                    </a></div>
+                {% else %}
+                <div class="col-4 my-auto">{{ choice.song_title }}</div>
+                <div class="col-3 my-auto mr-auto">{{ choice.interpret }}</div>
+                <div class="col-2 my-auto text-right">{{ choice.votes }}</div>
+                <div class="col-3 my-auto text-right"><a href="{% url 'vote' choice.id %}">
+                    <button class="btn btn-success">Vote!</button>
+                </a></div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            {% else %}
+            <div class="alert alert-success" role="alert">
+                Es wurden noch keine Lieder vorgeschlagen. Fang doch an!
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-0 col-md"></div>
+    </div>
+    <div class="row pt-3">
+
+        <div class="col-0 col-md"></div>
+        <div class="col-md-9 col-lg-7">
+            <form action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                <h2>Schlag ein Lied vor!</h2><br>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Liedtitel:</span>
+                    </div>
+                    <input type="text" id="song_title" name="song_title" class="form-control" placeholder="Liedtitel">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Interpret:</span>
+                    </div>
+                    <input type="text" id="interpret" name="interpret" class="form-control" placeholder="Interpret">
+                </div>
+                <button type="submit" class="btn btn-primary float-right">Lied vorschlagen</button>
+            </form>
+        </div>
+
+        <div class="col-0 col-md"></div>
+    </div>
+</div>
+</body>
+</html>
